@@ -1,0 +1,44 @@
+1)The average age of male and female persons died in the titanic tragedy:-
+
+titanic = load '/user/acadgild/TitanicData.txt' using PigStorage(',') as 
+(Passengerid:int, Survived:int, Pclass:int, Name, Sex:chararray, Age:int, Sibsp:int, Parch:int, Ticket:chararray, Fare:float, Cabin:chararray, Embarked:chararray);
+
+filtitanic = filter titanic by Survived == 1;
+
+male = filter filtitanic by Sex == 'male';
+
+female = filter filtitanic by Sex == 'female';
+
+grpmale = group male all;
+
+grpfemale = group female all;
+
+avgmale = foreach grpmale generate AVG(male.age);
+
+avgfemale = foreach grpfemale generate AVG(female.age);
+
+dump avgmale;  
+
+dump avgfemale;
+
+
+2)The number of people died and survived in each class:-
+
+titanic = load '/user/acadgild/TitanicData.txt' using PigStorage(',') as 
+(Passengerid:int,Survived:int, Pclass:int, Name, Sex:chararray, Age:int, Sibsp:int, Parch:int, Ticket:chararray, Fare:float, Cabin:chararray, Embarked:chararray);
+
+dead = filter titanic by Survived == 0;
+
+survived = filter titanic by Survived == 1;
+
+grpdead = group dead by Pclass;
+
+grpsurvived = group survived by Pclass;
+
+outputdead = foreach grpdead generate COUNT(dead);
+
+outputsurvived = foreach grpsurvived generate COUNT(survived);
+
+dump outputdead;  
+
+dump outputsurvived;
